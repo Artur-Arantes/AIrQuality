@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.fiap.airquality.ui.theme.AirQualityTheme
 import androidx.compose.runtime.*
+import br.com.fiap.airquality.ui.theme.DetailsScreen
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +52,10 @@ class MainActivity : ComponentActivity() {
                         val city = backStackEntry.arguments?.getString("city") ?: ""
                         val state = backStackEntry.arguments?.getString("state") ?: ""
                         val aqi = backStackEntry.arguments?.getInt("aqi") ?: 0
-                        ResultScreen(city = city, state = state, aqi = aqi)
+                        ResultScreen(city = city, state = state, aqi = aqi,navController)
+                    }
+                    composable("DetailsScreen") {
+                        DetailsScreen()
                     }
                 }
             }

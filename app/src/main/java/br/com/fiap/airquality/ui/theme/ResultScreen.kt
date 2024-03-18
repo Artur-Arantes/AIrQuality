@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,83 +25,109 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import br.com.fiap.airquality.R
 
 @Composable
-fun ResultScreen(city: String, state: String, aqi: Int) {
+fun ResultScreen(city: String, state: String, aqi: Int, navController: NavHostController) {
     val colorAqi = getColorForAqi(aqi)
     val textAqi = getTextForAqi(aqi)
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(horizontal = 8.dp)
             .clickable { /* Ação ao clicar na caixa */ }
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = "Localização",
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            fontSize = 30.sp,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Row(
-            modifier = Modifier
-                .padding(top = 30.dp, start = 20.dp, end = 20.dp)
-                .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                .align(Alignment.CenterHorizontally)
-                .width(285.dp)
-                .height(40.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.loc),
-                contentDescription = "Ícone de localização",
-                modifier = Modifier
-                    .size(35.dp)
-                    .padding(start = 16.dp)
-            )
+        Column {
             Text(
-                text = "$city,$state",
-                color = Color.Black,
-                fontSize = 15.sp,
+                text = "Localização",
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 32.dp)
+                textAlign = TextAlign.Center,
+                fontSize = 30.sp,
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Row(
+                modifier = Modifier
+                    .padding(top = 30.dp, start = 20.dp, end = 20.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                    .align(Alignment.CenterHorizontally)
+                    .width(285.dp)
+                    .height(40.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.loc),
+                    contentDescription = "Ícone de localização",
+                    modifier = Modifier
+                        .size(35.dp)
+                        .padding(start = 16.dp)
+                )
+                Text(
+                    text = "$city,$state",
+                    color = Color.Black,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 32.dp)
+                )
+            }
         }
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 300.dp),
-        contentAlignment = Alignment.Center
-    ) {
+
         Box(
             modifier = Modifier
-                .size(200.dp)
-                .border(width = 6.dp, color = colorAqi, shape = RoundedCornerShape(100.dp))
-                .background(color = Color.White, shape = RoundedCornerShape(100.dp)),
+                .fillMaxWidth()
+                .weight(1f),
             contentAlignment = Alignment.Center
         ) {
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .border(width = 6.dp, color = colorAqi, shape = RoundedCornerShape(100.dp))
+                    .background(color = Color.White, shape = RoundedCornerShape(100.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "IQA: $aqi",
+                        color = colorAqi,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = textAqi,
+                        color = colorAqi,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+        }
+
+        Button(
+            onClick = {
+                navController.navigate("DetailsScreen")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
             Text(
-                text = "AQI: $aqi",
-                color = colorAqi,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp
-            )
-            Text(
-                text = "$textAqi", color = colorAqi,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(top = 45.dp)
+                text = "O QUE É IQA ?",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
     }
 }
+
 
 fun getColorForAqi(aqi: Int): Color {
     return when {
