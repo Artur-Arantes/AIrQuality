@@ -2,6 +2,7 @@ package br.com.fiap.airquality
 
 import FormScreen
 import ResultScreen
+import LoadingScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.fiap.airquality.ui.theme.AirQualityTheme
+import androidx.compose.runtime.*
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,9 +25,20 @@ class MainActivity : ComponentActivity() {
                 background = painterResource(id = R.drawable.background)
             ) {
                 val navController = rememberNavController()
+                var showLoadingScreen by remember { mutableStateOf(true) }
+
+                LaunchedEffect(true) {
+                    delay(2000) // Delay de 2 segundos para simular carregamento
+                    showLoadingScreen = false
+                }
+
                 NavHost(navController = navController, startDestination = "FormScreen") {
                     composable("FormScreen") {
-                        FormScreen(navController)
+                        if (!showLoadingScreen) {
+                            FormScreen(navController)
+                        } else {
+                            LoadingScreen()
+                        }
                     }
                     composable(
                         "ResultScreen/{city}/{state}/{aqi}",
@@ -44,5 +58,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
